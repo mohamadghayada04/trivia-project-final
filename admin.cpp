@@ -1,7 +1,9 @@
+```cpp
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -214,6 +216,74 @@ void viewLeaderboard() {
     pauseScreen();
 }
 
+void deletePlayer() {
+    ifstream file("leaderboard.txt");
+
+    vector<string> kept;
+
+    string name;
+    int score;
+
+    cout << "\nEnter Player Name To Delete: ";
+    cin >> name;
+
+    bool found = false;
+
+    while (file >> name >> score) {
+        if (name == name) {
+            found = true;
+        } else {
+            kept.push_back(name + " " + to_string(score));
+        }
+    }
+
+    file.close();
+
+    ofstream out("leaderboard.txt");
+
+    for (const auto& line : kept) {
+        out << line << "\n";
+    }
+
+    if (found) {
+        cout << "\nPlayer Deleted Successfully.\n";
+    } else {
+        cout << "\nPlayer Not Found.\n";
+    }
+
+    pauseScreen();
+}
+
+void clearLeaderboard() {
+    ofstream file("leaderboard.txt");
+
+    cout << "\nLeaderboard Cleared Successfully.\n";
+
+    pauseScreen();
+}
+
+void viewProgress() {
+    ifstream file("progress.txt");
+
+    string name;
+    int idx;
+    int score;
+
+    cout << "\n================================================\n";
+    cout << "SAVED PROGRESS\n";
+    cout << "================================================\n\n";
+
+    if (file >> name >> idx >> score && name != "none") {
+        cout << "Player: " << name << "\n";
+        cout << "Next Question: " << idx + 1 << "\n";
+        cout << "Score: " << score << "\n";
+    } else {
+        cout << "No Saved Progress Found.\n";
+    }
+
+    pauseScreen();
+}
+
 void resetProgress() {
     ofstream file("progress.txt");
     file << "none 0 0";
@@ -250,8 +320,11 @@ int main() {
         cout << "2. Add Question\n";
         cout << "3. Delete Question\n";
         cout << "4. View Leaderboard\n";
-        cout << "5. Reset Progress\n";
-        cout << "6. Exit\n\n";
+        cout << "5. Delete Player\n";
+        cout << "6. View Progress\n";
+        cout << "7. Reset Progress\n";
+        cout << "8. Clear Leaderboard\n";
+        cout << "9. Exit\n\n";
 
         cout << "Choose Option: ";
 
@@ -277,9 +350,21 @@ int main() {
 
         } else if (choice == 5) {
             clearScreen();
-            resetProgress();
+            deletePlayer();
 
         } else if (choice == 6) {
+            clearScreen();
+            viewProgress();
+
+        } else if (choice == 7) {
+            clearScreen();
+            resetProgress();
+
+        } else if (choice == 8) {
+            clearScreen();
+            clearLeaderboard();
+
+        } else if (choice == 9) {
             cout << "\nGoodbye!\n";
             break;
 
@@ -291,3 +376,4 @@ int main() {
 
     return 0;
 }
+```
